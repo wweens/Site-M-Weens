@@ -396,7 +396,7 @@ img,video,iframe{max-width:100%;height:auto}
 }
 
 
-/* ===== corrections tablette : navigation + 2 séquences par ligne + icônes ===== */
+/* ===== corrections tablette : navigation + icônes ===== */
 .title-icon{
   width:1.05em;height:1.05em;display:inline-block;
   vertical-align:-.14em;margin-right:.28em;color:currentColor;
@@ -431,7 +431,7 @@ img,video,iframe{max-width:100%;height:auto}
     border-radius:12px;
   }
   .cards{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-template-columns:1fr!important;
     gap:.8rem!important;
   }
   .sequence-card{min-height:290px}
@@ -453,6 +453,11 @@ img,video,iframe{max-width:100%;height:auto}
     text-align:center;background:#ffffff0a;border-radius:11px;
   }
   .cards{grid-template-columns:1fr!important}
+}
+
+/* Cours et séquences : une carte par ligne, comme dans l'espace Latin. */
+#cours .cards{
+  grid-template-columns:1fr!important;
 }
 
 
