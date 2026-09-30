@@ -1,0 +1,38 @@
+name: Fix Latin card backgrounds
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-latin-backgrounds.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Point Latin cards to local images
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p = Path("latin/index.html")
+          s = p.read_text(encoding="utf-8")
+          positions = {"s1":"center 42%","s2":"center 42%","s3":"center 42%","s5":"center 35%","s6":"center 42%"}
+          for key, pos in positions.items():
+              pattern = rf"(\.{key}\s+\.seq-art\s*\{{\s*background\s*:\s*)(.*?)(;\s*\}})"
+              replacement = rf"\1linear-gradient(180deg,rgba(31,18,12,.05),rgba(31,18,12,.28)), url('assets/{key}-background.jpg') {pos}/cover no-repeat, linear-gradient(135deg,#9f6d38,#4d2419)\3"
+              s, n = re.subn(pattern, replacement, s, count=1, flags=re.S)
+              if n != 1:
+                  raise SystemExit(f"Could not update {key}: found {n} matching blocks")
+          p.write_text(s, encoding="utf-8")
+      - name: Commit correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add latin/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Use local images for Latin sequence backgrounds"
+          git push
